@@ -1,5 +1,9 @@
 # minesweeper
 
+**Team 59**:
+- Yaw Jalik (3035729435)
+- Guillemot Raphaele Michelle (3033093337)
+
 **Description:**
 Minesweeper, the game we all love/hate, in text-based format. Mines are randomly generated across the board and the player has to uncover all the empty blocks to win the game.
 
