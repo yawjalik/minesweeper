@@ -1,52 +1,76 @@
 #include <iostream>
+#include <string>
+#include <limits> // for the std::limits thing
 #include "functions.h"
-using namespace std;  // Will consider removing this for gOod COdiNg PRaCTiCE
+using namespace std;
 
 int main()
 {
     char map[ROWS][COLS];
 
-    initialize_map(map);
-    generate_mines(map);
-
     // main menu
+    string input;
+    system("clear");
+    // to handle the cin cout problem, where it takes "Minesweeper!" into cin
+    bool started = false;
     while (true)
     {
+        // Print main menu and get input:
+        if (started)
+        {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        cout << "Minesweeper!" << endl;
+        cout << "1. New Game  " << "2. Load Game  " << "3. Quit" << endl;
+        cout << ">> ";
+        getline(cin, input);
 
-        if (input == "newgame")
+        if (input == "1")
         {
             // Game loop
             int row, col;
-            while (69 < 420)
+            initialize_map(map);
+            generate_mines(map);
+            started = true;
+
+            while (true)
             {
                 system("clear");
                 print_map(map);
                 cin >> row >> col;  // Change to something like a0, b1, etc.
 
+                if (row > ROWS-1 || col > COLS-1)
+                {
+                    continue;
+                }
+
                 if (map[row][col] == 'X')
                 {
                     // print_uncovered_map()
-                    cout << "Game Over" << endl;
+                    cout << "Game Over!\n" << endl;
                     break;
                 }
 
-                if (some wiinning condition)
-                {
-                    // print_uncovered_map()
-                    cout << "you win or whatever" << endl;
-                    break;
-                }
+                // if (some winning condition)
+                // {
+                //     // print_uncovered_map()
+                //     cout << "you win or whatever" << endl;
+                //     break;
+                // }
                 map[row][col] = 'O'; // keeping track of the squares clicked / uncovered
             }
         }
-        else if (input == "quit")
+        else if (input == "3")
         {
+            cout << "Exited" << endl;
             break;
         }
         else
         {
-            cout << "bruh" << endl;
+            started = false;
+            cout << endl;
         }
+
     }
 
     return 0;

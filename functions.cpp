@@ -39,8 +39,8 @@ void generate_mines(char map[][COLS])
     // count == 3 for 3 mines
     while (count != 3)
     {
-        int row = rand() % 5;  0
-        int col = rand() % 5;  0
+        int row = rand() % 5;
+        int col = rand() % 5;
 
         if (map[row][col] == '*')
         {
