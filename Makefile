@@ -7,7 +7,7 @@ main.o: main.cpp functions.h
 main: main.o functions.o
 	g++ -pedantic-errors -std=c++11 $^ -o $@
 
-clear:
+clean:
 	rm -f main.o functions.o main
 
-.PHONY: clear
+.PHONY: clean
