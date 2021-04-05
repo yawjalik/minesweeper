@@ -1,13 +1,14 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
-const int ROWS = 5;  // max row
-const int COLS = 5;  // max col
-
-void initialize_map(char[][COLS]);
-void print_map(char[][COLS]);
-void generate_mines(char[][COLS]);
-void generate_clues(char[][COLS]);
-void flag(char[][COLS]);
+void initialize_board(char**, int, int);
+bool load_board(char**, int&, int&);
+void print_board(char**, int, int);
+void print_covered_board(char**, int, int);
+int generate_mines(char**, int, int);
+void generate_clues(char**, int, int);
+void flag(char**, int, int);
+void delete_board(char **board, int);
+bool save_board(char **board, int, int);
 
 #endif
