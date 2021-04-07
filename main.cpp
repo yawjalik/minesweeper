@@ -17,11 +17,33 @@ int main()
         cout << "█▀▄▀█ █ █▄░█ █▀▀ █▀ █░█░█ █▀▀ █▀▀ █▀█ █▀▀ █▀█" << endl;
         cout << "█░▀░█ █ █░▀█ ██▄ ▄█ ▀▄▀▄▀ ██▄ ██▄ █▀▀ ██▄ █▀▄\n"
              << endl;
-        cout << "1. New Game   2. Load Game   3. Quit" << endl;
+        cout << "0. Instructions   1. New Game   2. Load Game   3. Quit" << endl;
         cout << ">> ";
         getline(cin, command);
 
-        if (command == "1")
+        if (command == "0")
+        {
+            cout << "\033[H\033[J";
+            cout << "█▀▄▀█ █ █▄░█ █▀▀ █▀ █░█░█ █▀▀ █▀▀ █▀█ █▀▀ █▀█" << endl;
+            cout << "█░▀░█ █ █░▀█ ██▄ ▄█ ▀▄▀▄▀ ██▄ ██▄ █▀▀ ██▄ █▀▄\n"
+                 << endl;
+            string input;
+            cout << "WIN by uncovering all the unarmed mines \nLOSE by stepping on an armed mine \n \n";
+
+            cout << "each mine will have a number indicating how many BOMBS are around it \n e.g. a mine with the number 2 indicates that there are 2 bombs next to it \n \n";
+
+            cout << "UNCOVER by typing in the coordinates of the mine \n e.g. >> a0 \n \n";
+
+            cout << "add and remove FLAGS with ? to note down possible armed locations and prevent tripping them \n e.g. >> ?a0 \n \n";
+
+            cout << "Enter any value to return to menu" << endl;
+
+            cout << ">> ";
+            cin >> input;
+            continue;
+        }
+
+        else if (command == "1")
         {
             // Declaring variables
             string input;
@@ -75,7 +97,7 @@ int main()
             while (true)
             {
                 bool flag = false;
-                //cout << "\033[H\033[J";
+                cout << "\033[H\033[J";
                 print_covered_board(coords_uncovered, ROWS, COLS);
                 print_board(board, ROWS, COLS);
                 cout << ">> ";
@@ -125,7 +147,7 @@ int main()
                 // Uncovering or flagging
                 if (flag && coords_uncovered[row][col] == '?')
                     coords_uncovered[row][col] = '*';
-                else if (flag)
+                else if (flag && coords_uncovered[row][col] == '*')
                     coords_uncovered[row][col] = '?';
                 else
                 {
