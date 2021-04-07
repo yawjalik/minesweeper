@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <cctype>
+#include <limits>
+#include <chrono>
 #include "functions.h"
 using namespace std;
 
@@ -10,39 +12,26 @@ int main()
 {
     // Main Menu
     string command;
+    bool menu_started = false;  // for the cin cout problem
     while (true)
     {
         // Print main menu and get input:
         cout << "\033[H\033[J";
         cout << "█▀▄▀█ █ █▄░█ █▀▀ █▀ █░█░█ █▀▀ █▀▀ █▀█ █▀▀ █▀█" << endl;
-        cout << "█░▀░█ █ █░▀█ ██▄ ▄█ ▀▄▀▄▀ ██▄ ██▄ █▀▀ ██▄ █▀▄\n"
-             << endl;
+        cout << "█░▀░█ █ █░▀█ ██▄ ▄█ ▀▄▀▄▀ ██▄ ██▄ █▀▀ ██▄ █▀▄\n" << endl;
         cout << "0. Instructions   1. New Game   2. Load Game   3. Quit" << endl;
         cout << ">> ";
+        if (menu_started)
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
         getline(cin, command);
+        menu_started = true;
 
         if (command == "0")
         {
             cout << "\033[H\033[J";
-            cout << "█▀▄▀█ █ █▄░█ █▀▀ █▀ █░█░█ █▀▀ █▀▀ █▀█ █▀▀ █▀█" << endl;
-            cout << "█░▀░█ █ █░▀█ ██▄ ▄█ ▀▄▀▄▀ ██▄ ██▄ █▀▀ ██▄ █▀▄\n"
-                 << endl;
-            string input;
-            cout << "WIN by uncovering all the unarmed mines \nLOSE by stepping on an armed mine \n \n";
-
-            cout << "each mine will have a number indicating how many BOMBS are around it \n e.g. a mine with the number 2 indicates that there are 2 bombs next to it \n \n";
-
-            cout << "UNCOVER by typing in the coordinates of the mine \n e.g. >> a0 \n \n";
-
-            cout << "add and remove FLAGS with ? to note down possible armed locations and prevent tripping them \n e.g. >> ?a0 \n \n";
-
-            cout << "Enter any value to return to menu" << endl;
-
-            cout << ">> ";
-            cin >> input;
+            print_instructions();
             continue;
         }
-
         else if (command == "1")
         {
             // Declaring variables
@@ -51,11 +40,12 @@ int main()
             int row, col;   // user row col input
             int total_mines, uncovered = 0;
             string difficulty;
+            bool game_started = false;  // also for cin cout problem
 
             // SELECT DIFFICULTY
             cout << "\nSELECT DIFFICULTY" << endl;
             cout << "1. Easy   2. Medium   3. Hard   4. Holy Shit\n";
-            while (true)
+            while (69 < 420) // lmao nice
             {
                 cout << ">> ";
                 cin >> difficulty;
@@ -94,20 +84,28 @@ int main()
             total_mines = generate_mines(board, ROWS, COLS);
             generate_clues(board, ROWS, COLS);
 
+            // Start clock
+            auto begin = chrono::high_resolution_clock::now();
+
             // Game Loop
             while (true)
             {
                 bool flag = false;
                 cout << "\033[H\033[J";
                 print_board(coords_uncovered, ROWS, COLS);
+                // print_board(board, ROWS, COLS);
                 cout << ">> ";
-                getline(cin, input); // something like a0, b1, etc.
+                if (!game_started)
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                getline(cin, input); // a0, b1, etc.
+                game_started = true;
 
                 // Temporary exit command
                 if (input == "quit" || input == "exit")
                 {
                     delete_board(board, ROWS);
                     delete_board(coords_uncovered, ROWS);
+                    menu_started = false;
                     break;
                 }
 
@@ -128,7 +126,7 @@ int main()
                     if (row >= ROWS || col >= COLS || board[row][col] < '0')
                         continue;
                 }
-                // if flag fuction
+                // if flag function
                 else if (input.length() == 4 && input[0] == '?' && islower(input[1]) && isdigit(input[2]) && isdigit(input[3]))
                 {
                     flag = true;
@@ -151,12 +149,18 @@ int main()
                 // Losing condition
                 if (board[row][col] == 'X' && !flag && coords_uncovered[row][col] != '?')
                 {
-                    //cout << "\033[H\033[J";
+                    cout << "\033[H\033[J";
                     print_board(board, ROWS, COLS);
+
+                    auto end = chrono::high_resolution_clock::now();
+                    auto elapsed = chrono::duration_cast<chrono::seconds>(end - begin);
+                    cout << "Time: " << elapsed.count() << " seconds" << endl;
+
                     cout << "Game Over!\nEnter any value to return to menu" << endl;
                     delete_board(board, ROWS);
                     delete_board(coords_uncovered, ROWS);
                     cin >> input;
+                    menu_started = false;
                     break;
                 }
 
@@ -165,7 +169,6 @@ int main()
                     coords_uncovered[row][col] = '*';
                 else if (flag && coords_uncovered[row][col] == '*')
                     coords_uncovered[row][col] = '?';
-
                 // Uncovering square
                 else if (coords_uncovered[row][col] == '*')
                 {
@@ -179,10 +182,16 @@ int main()
                 {
                     cout << "\033[H\033[J";
                     print_board(board, ROWS, COLS);
+
+                    auto end = chrono::high_resolution_clock::now();
+                    auto elapsed = chrono::duration_cast<chrono::seconds>(end - begin);
+                    cout << "Time: " << elapsed.count() << " seconds" << endl;
+
                     cout << "You Win!\nEnter any value to return to menu" << endl;
                     delete_board(board, ROWS);
                     delete_board(coords_uncovered, ROWS);
                     cin >> input;
+                    menu_started = false;
                     break;
                 }
             }
@@ -210,6 +219,10 @@ int main()
             cout << "█▀▀ █▀█ █▀█ █▀▄ █▄▄ █▄█ █▀▀ █" << endl;
             cout << "█▄█ █▄█ █▄█ █▄▀ █▄█ ░█░ ██▄ ▄" << endl;
             break;
+        }
+        else
+        {
+            menu_started = false;
         }
     }
 
