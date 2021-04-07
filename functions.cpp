@@ -5,14 +5,16 @@
 #include "functions.h"
 using namespace std;
 
-void initialize_board(char **board, int ROWS, int COLS)
+void initialize_board(char **board, int ROWS, int COLS, char **coords_uncovered)
 {
     for (int i = 0; i < ROWS; i++)
     {
         board[i] = new char[COLS];
+        coords_uncovered[i] = new char[COLS];
         for (int j = 0; j < COLS; j++)
         {
-            board[i][j] = '*';
+            board[i][j] = '0';
+            coords_uncovered[i][j] = '*';
         }
     }
 }
@@ -37,7 +39,7 @@ bool load_board(char **board, int &ROWS, int &COLS)
     return true;
 }
 
-void print_board(char **board, int ROWS, int COLS)  // print a less ugly map please
+void print_board(char **board, int ROWS, int COLS) // print a less ugly map please
 {
     cout << "  ";
     for (int i = 0; i < COLS; i++)
@@ -55,7 +57,7 @@ void print_board(char **board, int ROWS, int COLS)  // print a less ugly map ple
     }
 }
 
-void print_covered_board(char **board, int ROWS, int COLS)
+void print_covered_board(char **coords_uncovered, int ROWS, int COLS)
 {
     cout << "  ";
     for (int i = 0; i < COLS; i++)
@@ -67,11 +69,7 @@ void print_covered_board(char **board, int ROWS, int COLS)
         cout << char(i + 'a') << ' ';
         for (int j = 0; j < COLS; j++)
         {
-            // Added the condition to cover up the bombs
-            if (board[i][j] == 'X')
-                cout << '*' << ' ';
-            else
-                cout << board[i][j] << ' ';
+            cout << coords_uncovered[i][j] << ' ';
         }
         cout << endl;
     }
@@ -90,6 +88,7 @@ int generate_mines(char **board, int ROWS, int COLS)
         if (board[row][col] != 'X')
         {
             board[row][col] = 'X';
+            cout << row << col << endl;
             count++;
         }
     }
@@ -98,12 +97,40 @@ int generate_mines(char **board, int ROWS, int COLS)
 
 void generate_clues(char **board, int ROWS, int COLS)
 {
-    // TODO
-}
+    for (int row = 0; row < ROWS; row++)
+    {
+        for (int col = 0; col < COLS; col++)
+        {
+            if (board[row][col] == 'X')
+            {
+                // check if it doesn't touch the borders or isn't a mine, then add 1 on the tiles
+                if (col > 0 && board[row][col - 1] != 'X') // check left/right
+                    board[row][col - 1] += 1;
 
-void flag(char **board, int ROWS, int COLS)
-{
-    // TODO
+                if (col < COLS && board[row][col + 1] != 'X')
+                    board[row][col + 1] += 1;
+
+                if (row > 0) // check top row
+                {
+                    if (board[row - 1][col] != 'X') // if not X
+                        board[row - 1][col] += 1;
+                    if (col > 0 && board[row - 1][col - 1] != 'X') // and if left/right are fine too
+                        board[row - 1][col - 1] += 1;
+                    if (col < COLS && board[row - 1][col + 1] != 'X')
+                        board[row - 1][col + 1] += 1;
+                }
+                if (row < ROWS - 1) // check bottom row
+                {
+                    if (board[row + 1][col] != 'X') // if not X
+                        board[row + 1][col] += 1;
+                    if (col > 0 && board[row + 1][col - 1] != 'X') // and if left/right are fine too
+                        board[row + 1][col - 1] += 1;
+                    if (col < COLS && board[row + 1][col + 1] != 'X')
+                        board[row + 1][col + 1] += 1;
+                }
+            }
+        }
+    }
 }
 
 void delete_board(char **board, int ROWS)

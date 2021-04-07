@@ -15,7 +15,8 @@ int main()
         // Print main menu and get input:
         cout << "\033[H\033[J";
         cout << "█▀▄▀█ █ █▄░█ █▀▀ █▀ █░█░█ █▀▀ █▀▀ █▀█ █▀▀ █▀█" << endl;
-        cout << "█░▀░█ █ █░▀█ ██▄ ▄█ ▀▄▀▄▀ ██▄ ██▄ █▀▀ ██▄ █▀▄\n" << endl;
+        cout << "█░▀░█ █ █░▀█ ██▄ ▄█ ▀▄▀▄▀ ██▄ ██▄ █▀▀ ██▄ █▀▄\n"
+             << endl;
         cout << "1. New Game   2. Load Game   3. Quit" << endl;
         cout << ">> ";
         getline(cin, command);
@@ -38,39 +39,46 @@ int main()
                 cin >> difficulty;
                 if (difficulty == "1")
                 {
-                    ROWS = 6; COLS = 8;
+                    ROWS = 6;
+                    COLS = 8;
                     break;
                 }
                 else if (difficulty == "2")
                 {
-                    ROWS = 8; COLS = 10;
+                    ROWS = 8;
+                    COLS = 10;
                     break;
                 }
                 else if (difficulty == "3")
                 {
-                    ROWS = 10; COLS = 12;
+                    ROWS = 10;
+                    COLS = 12;
                     break;
                 }
                 else if (difficulty == "4")
                 {
-                    ROWS = 18; COLS = 20;
+                    ROWS = 18;
+                    COLS = 20;
                     break;
                 }
             }
 
             // Initializing
-            char **board = new char*[ROWS];
-            initialize_board(board, ROWS, COLS);
+            char **board = new char *[ROWS];
+            char **coords_uncovered = new char *[ROWS];
+            initialize_board(board, ROWS, COLS, coords_uncovered);
             total_mines = generate_mines(board, ROWS, COLS);
+            generate_clues(board, ROWS, COLS);
 
             // Game Loop
             while (true)
             {
+                bool flag = false;
                 cout << "\033[H\033[J";
-                print_covered_board(board, ROWS, COLS);
-                // print_board(board, ROWS, COLS);
+                print_covered_board(coords_uncovered, ROWS, COLS);
+                print_board(board, ROWS, COLS);
                 cout << ">> ";
-                getline(cin, input);  // something like a0, b1, etc.
+                getline(cin, input); // something like a0, b1, etc.
 
                 // Temporary exit command
                 if (input == "quit" || input == "exit")
@@ -82,14 +90,23 @@ int main()
                     row = input[0] - 'a';
                     col = input[1] - '0';
                     // Check for limit and repeated row/col
-                    if (row >= ROWS || col >= COLS || board[row][col] == 'O')
+                    if (row >= ROWS || col >= COLS || board[row][col] <= '0')
+                        continue;
+                }
+                // if flag fuction
+                else if (input.length() == 3 && input[0] == '?' && islower(input[1]) && isdigit(input[2]))
+                {
+                    flag = true;
+                    row = input[1] - 'a';
+                    col = input[2] - '0';
+                    if (row >= ROWS || col >= COLS || board[row][col] <= '0')
                         continue;
                 }
                 else
                     continue;
 
                 // Losing condition
-                if (board[row][col] == 'X')
+                if (board[row][col] == 'X' && !flag && coords_uncovered[row][col] == '?')
                 {
                     cout << "\033[H\033[J";
                     print_board(board, ROWS, COLS);
@@ -98,11 +115,20 @@ int main()
                     cin >> input;
                     break;
                 }
-
-                // Uncovering square
-                board[row][col] = 'O'; // O indicates uncovered
-                uncovered++;
-                cout << uncovered << endl;
+                if (flag && coords_uncovered[row][col] = '?')
+                    coords_uncovered[row][col] = '*';
+                else if (flag)
+                    coords_uncovered[row][col] = '?';
+                else
+                {
+                    // Uncovering square
+                    if (coords_uncovered[row][col] == '*')
+                    {
+                        coords_uncovered[row][col] = board[row][col];
+                        uncovered++;
+                        cout << uncovered << endl;
+                    }
+                }
 
                 // Winning condition
                 if (uncovered == (ROWS * COLS - total_mines))
@@ -120,7 +146,7 @@ int main()
         {
             int ROWS, COLS;
             string input;
-            char **board = new char*[ROWS];
+            char **board = new char *[ROWS];
             if (!load_board(board, ROWS, COLS))
             {
                 delete[] board;
@@ -140,10 +166,7 @@ int main()
             cout << "█▄█ █▄█ █▄█ █▄▀ █▄█ ░█░ ██▄ ▄" << endl;
             break;
         }
-
     }
 
     return 0;
 }
-
-
