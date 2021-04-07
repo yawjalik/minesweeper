@@ -87,9 +87,10 @@ int main()
 
             // Initializing
             char **board = new char *[ROWS];
-            char **coords_uncovered = new char *[ROWS];
             initialize_board(board, ROWS, COLS, '0');
+            char **coords_uncovered = new char *[ROWS];
             initialize_board(coords_uncovered, ROWS, COLS, '*');
+
             total_mines = generate_mines(board, ROWS, COLS);
             generate_clues(board, ROWS, COLS);
 
@@ -98,8 +99,7 @@ int main()
             {
                 bool flag = false;
                 cout << "\033[H\033[J";
-                print_covered_board(coords_uncovered, ROWS, COLS);
-                print_board(board, ROWS, COLS);
+                print_board(coords_uncovered, ROWS, COLS);
                 cout << ">> ";
                 getline(cin, input); // something like a0, b1, etc.
 
@@ -112,6 +112,14 @@ int main()
                 }
 
                 // Check invalid input, set row col, check valid row col and no repeats
+                if (input.length() == 3 && islower(input[0]) && isdigit(input[1]) && isdigit(input[2]))
+                {
+                    row = input[0] - 'a';
+                    col = input[2] - '0' + 10;
+                    // Check for limit and repeated row/col
+                    if (row >= ROWS || col >= COLS || board[row][col] < '0')
+                        continue;
+                }
                 if (input.length() == 2 && islower(input[0]) && isdigit(input[1]))
                 {
                     row = input[0] - 'a';
@@ -121,21 +129,29 @@ int main()
                         continue;
                 }
                 // if flag fuction
+                else if (input.length() == 4 && input[0] == '?' && islower(input[1]) && isdigit(input[2]) && isdigit(input[3]))
+                {
+                    flag = true;
+                    row = input[1] - 'a';
+                    col = input[3] - '0' + 10;
+                    if (row >= ROWS || col >= COLS || board[row][col] < '0')
+                        continue;
+                }
                 else if (input.length() == 3 && input[0] == '?' && islower(input[1]) && isdigit(input[2]))
                 {
                     flag = true;
                     row = input[1] - 'a';
                     col = input[2] - '0';
-                    if (row >= ROWS || col >= COLS || board[row][col] <= '0')
+                    if (row >= ROWS || col >= COLS || board[row][col] < '0')
                         continue;
                 }
                 else
                     continue;
 
                 // Losing condition
-                if (board[row][col] == 'X' && coords_uncovered[row][col] != '?')
+                if (board[row][col] == 'X' && !flag && coords_uncovered[row][col] != '?')
                 {
-                    cout << "\033[H\033[J";
+                    //cout << "\033[H\033[J";
                     print_board(board, ROWS, COLS);
                     cout << "Game Over!\nEnter any value to return to menu" << endl;
                     delete_board(board, ROWS);
@@ -144,20 +160,18 @@ int main()
                     break;
                 }
 
-                // Uncovering or flagging
+                // Toggle flagging
                 if (flag && coords_uncovered[row][col] == '?')
                     coords_uncovered[row][col] = '*';
                 else if (flag && coords_uncovered[row][col] == '*')
                     coords_uncovered[row][col] = '?';
-                else
+
+                // Uncovering square
+                else if (coords_uncovered[row][col] == '*')
                 {
-                    // Uncovering square
-                    if (coords_uncovered[row][col] == '*')
-                    {
-                        coords_uncovered[row][col] = board[row][col];
-                        uncovered++;
-                        cout << uncovered << endl;
-                    }
+                    coords_uncovered[row][col] = board[row][col];
+                    uncovered++;
+                    cout << uncovered << endl;
                 }
 
                 // Winning condition
