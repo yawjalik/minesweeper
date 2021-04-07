@@ -5,16 +5,14 @@
 #include "functions.h"
 using namespace std;
 
-void initialize_board(char **board, int ROWS, int COLS, char **coords_uncovered)
+void initialize_board(char **board, int ROWS, int COLS, char letter)
 {
     for (int i = 0; i < ROWS; i++)
     {
         board[i] = new char[COLS];
-        coords_uncovered[i] = new char[COLS];
         for (int j = 0; j < COLS; j++)
         {
-            board[i][j] = '0';
-            coords_uncovered[i][j] = '*';
+            board[i][j] = letter;
         }
     }
 }

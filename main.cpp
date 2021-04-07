@@ -66,7 +66,8 @@ int main()
             // Initializing
             char **board = new char *[ROWS];
             char **coords_uncovered = new char *[ROWS];
-            initialize_board(board, ROWS, COLS, coords_uncovered);
+            initialize_board(board, ROWS, COLS, '0');
+            initialize_board(coords_uncovered, ROWS, COLS, '*');
             total_mines = generate_mines(board, ROWS, COLS);
             generate_clues(board, ROWS, COLS);
 
@@ -74,7 +75,7 @@ int main()
             while (true)
             {
                 bool flag = false;
-                cout << "\033[H\033[J";
+                //cout << "\033[H\033[J";
                 print_covered_board(coords_uncovered, ROWS, COLS);
                 print_board(board, ROWS, COLS);
                 cout << ">> ";
@@ -82,7 +83,11 @@ int main()
 
                 // Temporary exit command
                 if (input == "quit" || input == "exit")
+                {
+                    delete_board(board, ROWS);
+                    delete_board(coords_uncovered, ROWS);
                     break;
+                }
 
                 // Check invalid input, set row col, check valid row col and no repeats
                 if (input.length() == 2 && islower(input[0]) && isdigit(input[1]))
@@ -90,7 +95,7 @@ int main()
                     row = input[0] - 'a';
                     col = input[1] - '0';
                     // Check for limit and repeated row/col
-                    if (row >= ROWS || col >= COLS || board[row][col] <= '0')
+                    if (row >= ROWS || col >= COLS || board[row][col] < '0')
                         continue;
                 }
                 // if flag fuction
@@ -106,16 +111,19 @@ int main()
                     continue;
 
                 // Losing condition
-                if (board[row][col] == 'X' && !flag && coords_uncovered[row][col] == '?')
+                if (board[row][col] == 'X' && coords_uncovered[row][col] != '?')
                 {
                     cout << "\033[H\033[J";
                     print_board(board, ROWS, COLS);
                     cout << "Game Over!\nEnter any value to return to menu" << endl;
                     delete_board(board, ROWS);
+                    delete_board(coords_uncovered, ROWS);
                     cin >> input;
                     break;
                 }
-                if (flag && coords_uncovered[row][col] = '?')
+
+                // Uncovering or flagging
+                if (flag && coords_uncovered[row][col] == '?')
                     coords_uncovered[row][col] = '*';
                 else if (flag)
                     coords_uncovered[row][col] = '?';
@@ -137,6 +145,7 @@ int main()
                     print_board(board, ROWS, COLS);
                     cout << "You Win!\nEnter any value to return to menu" << endl;
                     delete_board(board, ROWS);
+                    delete_board(coords_uncovered, ROWS);
                     cin >> input;
                     break;
                 }

@@ -1,7 +1,7 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
-void initialize_board(char **, int, int, char **);
+void initialize_board(char **, int, int, char);
 bool load_board(char **, int &, int &);
 void print_board(char **, int, int);
 void print_covered_board(char **, int, int);
