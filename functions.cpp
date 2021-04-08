@@ -175,3 +175,31 @@ bool save_board(char **board, char **coords_uncovered, int ROWS, int COLS, int u
     cin >> input;
     return true;
 }
+
+void flood_fill(char **board, char **coords_uncovered, int ROWS, int COLS, int row, int col, int &uncovered)
+{
+    // If already uncovered
+    if (coords_uncovered[row][col] == '0')
+        return;
+
+    // If not a zero
+    if (board[row][col] != '0')
+    {
+        coords_uncovered[row][col] = board[row][col];
+        return;
+    }
+
+    coords_uncovered[row][col] = '0';
+    uncovered++;
+
+    if (row < ROWS - 1)
+        flood_fill(board, coords_uncovered, ROWS, COLS, row+1, col, uncovered);
+    if (row > 0)
+        flood_fill(board, coords_uncovered, ROWS, COLS, row-1, col, uncovered);
+    if (col > 0)
+        flood_fill(board, coords_uncovered, ROWS, COLS, row, col-1, uncovered);
+    if (col < COLS - 1)
+        flood_fill(board, coords_uncovered, ROWS, COLS, row, col+1, uncovered);
+
+
+}

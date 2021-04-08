@@ -154,6 +154,12 @@ int main()
                 else
                     continue;
 
+                // Flood fill
+                if (board[row][col] == '0' && !flag && coords_uncovered[row][col] != '?')
+                {
+                    flood_fill(board, coords_uncovered, ROWS, COLS, row, col, uncovered);
+                }
+
                 // Losing condition
                 if (board[row][col] == 'X' && !flag && coords_uncovered[row][col] != '?')
                 {
@@ -379,6 +385,12 @@ int main()
                 }
                 else
                     continue;
+
+                // Flood fill
+                if (board[row][col] == '0' && !flag && coords_uncovered[row][col] != '?')
+                {
+                    flood_fill(board, coords_uncovered, ROWS, COLS, row, col, uncovered);
+                }
 
                 // Losing condition
                 if (board[row][col] == 'X' && !flag && coords_uncovered[row][col] != '?')
