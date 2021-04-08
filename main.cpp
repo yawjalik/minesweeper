@@ -291,8 +291,8 @@ int main()
             }
 
             // Declaring variables
-            int row, col;   // user row col input
-            bool game_started = false;  // also for cin cout problem
+            int row, col;              // user row col input
+            bool game_started = false; // also for cin cout problem
 
             // Start clock
             auto begin = chrono::high_resolution_clock::now();
@@ -364,14 +364,51 @@ int main()
                 // Losing condition
                 if (board[row][col] == 'X' && !flag && coords_uncovered[row][col] != '?')
                 {
-                    cout << "\033[H\033[J";
-                    print_board(board, ROWS, COLS);
-
+                    // Logistics- Time
                     auto end = chrono::high_resolution_clock::now();
                     auto elapsed = chrono::duration_cast<chrono::seconds>(end - begin);
-                    cout << "Time: " << elapsed.count() << " seconds" << endl;
 
-                    cout << "Game Over!\nEnter any value to return to menu" << endl;
+                    // Logistics- flags
+                    int flaggedBombs = 0;
+                    for (int i = 0; i < ROWS; i++)
+                    {
+                        for (int j = 0; j < COLS; j++)
+                        {
+                            if (board[i][j] == 'X' && coords_uncovered[i][j] == '?')
+                                flaggedBombs++;
+                        }
+                    }
+
+                    cout << "\033[H\033[J";
+
+                    cout << "█▀▀ ▄▀█ █▀▄▀█ █▀▀   █▀█ █ █ █▀▀ █▀█" << endl;
+                    cout << "█▄█ █▀█ █ ▀ █ ██▄   █▄█ ▀▄▀ ██▄ █▀▄\n"
+                         << endl;
+
+                    print_board(board, ROWS, COLS);
+                    cout << endl;
+
+                    cout << "Mode: ";
+                    if (difficulty == "1")
+                        cout << "Easy" << endl;
+                    else if (difficulty == "2")
+                        cout << "Medium" << endl;
+                    else if (difficulty == "3")
+                        cout << "Hard" << endl;
+                    else if (difficulty == "4")
+                        cout << "Holy Shit" << endl;
+                    cout << "Time: ";
+                    if ((elapsed.count() / 60) > 1)
+                        cout << floor(elapsed.count() / 60) << " minutes and " << (elapsed.count() % 60) << " seconds" << endl;
+                    else if ((elapsed.count() / 60) >= 1)
+                        cout << floor(elapsed.count() / 60) << " minute and " << (elapsed.count() % 60) << " seconds" << endl;
+                    else
+                        cout << elapsed.count() << " seconds" << endl;
+                    cout << "Mines travelled: " << uncovered << endl;
+                    cout << "Bombs flagged: " << flaggedBombs << "/" << total_mines << endl;
+
+                    cout << "\nEnter any value to return to menu" << endl;
+                    cout << ">> ";
                     delete_board(board, ROWS);
                     delete_board(coords_uncovered, ROWS);
                     cin >> input;
@@ -395,14 +432,51 @@ int main()
                 // Winning condition
                 if (uncovered == (ROWS * COLS - total_mines))
                 {
-                    cout << "\033[H\033[J";
-                    print_board(board, ROWS, COLS);
-
+                    // Logistics- Time
                     auto end = chrono::high_resolution_clock::now();
                     auto elapsed = chrono::duration_cast<chrono::seconds>(end - begin);
-                    cout << "Time: " << elapsed.count() << " seconds" << endl;
 
-                    cout << "You Win!\nEnter any value to return to menu" << endl;
+                    // Logistics- flags
+                    int flaggedBombs = 0;
+                    for (int i = 0; i < ROWS; i++)
+                    {
+                        for (int j = 0; j < COLS; j++)
+                        {
+                            if (board[i][j] == 'X' && coords_uncovered[i][j] == '?')
+                                flaggedBombs++;
+                        }
+                    }
+
+                    cout << "\033[H\033[J";
+
+                    cout << "█▀▀ █▀█ █▄ █ █▀▀ █▀█ ▄▀█ ▀█▀ █ █ █   ▄▀█ ▀█▀ █ █▀█ █▄ █ █▀" << endl;
+                    cout << "█▄▄ █▄█ █ ▀█ █▄█ █▀▄ █▀█  █  █▄█ █▄▄ █▀█  █  █ █▄█ █ ▀█ ▄█\n"
+                         << endl;
+
+                    print_board(board, ROWS, COLS);
+                    cout << endl;
+
+                    cout << "Mode: ";
+                    if (difficulty == "1")
+                        cout << "Easy" << endl;
+                    else if (difficulty == "2")
+                        cout << "Medium" << endl;
+                    else if (difficulty == "3")
+                        cout << "Hard" << endl;
+                    else if (difficulty == "4")
+                        cout << "Holy Shit" << endl;
+                    cout << "Time: ";
+                    if ((elapsed.count() / 60) > 1)
+                        cout << floor(elapsed.count() / 60) << " minutes and " << (elapsed.count() % 60) << " seconds" << endl;
+                    else if ((elapsed.count() / 60) >= 1)
+                        cout << floor(elapsed.count() / 60) << " minute and " << (elapsed.count() % 60) << " seconds" << endl;
+                    else
+                        cout << elapsed.count() << " seconds" << endl;
+                    cout << "Mines travelled: " << uncovered << endl;
+                    cout << "Bombs flagged: " << flaggedBombs << "/" << total_mines << endl;
+
+                    cout << "\nEnter any value to return to menu" << endl;
+                    cout << ">> ";
                     delete_board(board, ROWS);
                     delete_board(coords_uncovered, ROWS);
                     cin >> input;
