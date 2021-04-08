@@ -179,19 +179,21 @@ bool save_board(char **board, char **coords_uncovered, int ROWS, int COLS, int u
 void flood_fill(char **board, char **coords_uncovered, int ROWS, int COLS, int row, int col, int &uncovered)
 {
     // If already uncovered
-    if (coords_uncovered[row][col] == '0')
+    if (coords_uncovered[row][col] != '*')
         return;
 
     // If not a zero
     if (board[row][col] != '0')
     {
         coords_uncovered[row][col] = board[row][col];
+        uncovered++;
         return;
     }
 
     coords_uncovered[row][col] = '0';
     uncovered++;
 
+    // Left Right Up Down
     if (row < ROWS - 1)
         flood_fill(board, coords_uncovered, ROWS, COLS, row+1, col, uncovered);
     if (row > 0)
@@ -201,5 +203,14 @@ void flood_fill(char **board, char **coords_uncovered, int ROWS, int COLS, int r
     if (col < COLS - 1)
         flood_fill(board, coords_uncovered, ROWS, COLS, row, col+1, uncovered);
 
+    // Four corners
+    if (row > 0 && col < COLS - 1)
+        flood_fill(board, coords_uncovered, ROWS, COLS, row-1, col+1, uncovered);
+    if (row < ROWS - 1 && col > 0)
+        flood_fill(board, coords_uncovered, ROWS, COLS, row+1, col-1, uncovered);
+    if (row > 0 && col > 0)
+        flood_fill(board, coords_uncovered, ROWS, COLS, row-1, col-1, uncovered);
+    if (row < ROWS - 1 && col < COLS - 1)
+        flood_fill(board, coords_uncovered, ROWS, COLS, row+1, col+1, uncovered);
 
 }
