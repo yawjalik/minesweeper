@@ -100,13 +100,18 @@ int main()
                 getline(cin, input); // a0, b1, etc.
                 game_started = true;
 
-                // Temporary exit command
+                // Exit and save commands
                 if (input == "quit" || input == "exit")
                 {
                     delete_board(board, ROWS);
                     delete_board(coords_uncovered, ROWS);
                     menu_started = false;
                     break;
+                }
+                else if (input == "save")
+                {
+                    if (!save_board(board, coords_uncovered, ROWS, COLS, uncovered, total_mines))
+                        cout << "Save failed :(" << endl;
                 }
 
                 // Check invalid input, set row col, check valid row col and no repeats
@@ -198,20 +203,137 @@ int main()
         }
         else if (command == "2")
         {
-            int ROWS, COLS;
+            int ROWS, COLS, uncovered, total_mines;
             string input;
-            char **board = new char *[ROWS];
-            if (!load_board(board, ROWS, COLS))
+            char **board = NULL;
+            char **coords_uncovered = NULL;
+            if (!load_board(board, coords_uncovered, ROWS, COLS, uncovered, total_mines))
             {
-                delete[] board;
                 cout << "No save file detected\nEnter any value to return to menu" << endl;
                 cin >> input;
                 continue;
             }
 
-            cout << "Loaded" << endl;
-            // generate_mines(board, ROWS, COLS);
-            delete[] board;
+            // Declaring variables
+            int row, col;   // user row col input
+            bool game_started = false;  // also for cin cout problem
+
+            // Start clock
+            auto begin = chrono::high_resolution_clock::now();
+
+            // Game Loop
+            while (true)
+            {
+                bool flag = false;
+                cout << "\033[H\033[J";
+                print_board(coords_uncovered, ROWS, COLS);
+                // print_board(board, ROWS, COLS);
+                cout << ">> ";
+                // if (game_started)
+                //     cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                getline(cin, input); // a0, b1, etc.
+                // game_started = true; no cin cout issue i think
+
+                // Exit and save commands
+                if (input == "quit" || input == "exit")
+                {
+                    delete_board(board, ROWS);
+                    delete_board(coords_uncovered, ROWS);
+                    menu_started = false;
+                    break;
+                }
+                else if (input == "save")
+                {
+                    if (!save_board(board, coords_uncovered, ROWS, COLS, uncovered, total_mines))
+                        cout << "Save failed :(" << endl;
+                }
+
+                // Check invalid input, set row col, check valid row col and no repeats
+                if (input.length() == 3 && islower(input[0]) && isdigit(input[1]) && isdigit(input[2]))
+                {
+                    row = input[0] - 'a';
+                    col = input[2] - '0' + 10;
+                    // Check for limit and repeated row/col
+                    if (row >= ROWS || col >= COLS || board[row][col] < '0')
+                        continue;
+                }
+                if (input.length() == 2 && islower(input[0]) && isdigit(input[1]))
+                {
+                    row = input[0] - 'a';
+                    col = input[1] - '0';
+                    // Check for limit and repeated row/col
+                    if (row >= ROWS || col >= COLS || board[row][col] < '0')
+                        continue;
+                }
+                // if flag function
+                else if (input.length() == 4 && input[0] == '?' && islower(input[1]) && isdigit(input[2]) && isdigit(input[3]))
+                {
+                    flag = true;
+                    row = input[1] - 'a';
+                    col = input[3] - '0' + 10;
+                    if (row >= ROWS || col >= COLS || board[row][col] < '0')
+                        continue;
+                }
+                else if (input.length() == 3 && input[0] == '?' && islower(input[1]) && isdigit(input[2]))
+                {
+                    flag = true;
+                    row = input[1] - 'a';
+                    col = input[2] - '0';
+                    if (row >= ROWS || col >= COLS || board[row][col] < '0')
+                        continue;
+                }
+                else
+                    continue;
+
+                // Losing condition
+                if (board[row][col] == 'X' && !flag && coords_uncovered[row][col] != '?')
+                {
+                    cout << "\033[H\033[J";
+                    print_board(board, ROWS, COLS);
+
+                    auto end = chrono::high_resolution_clock::now();
+                    auto elapsed = chrono::duration_cast<chrono::seconds>(end - begin);
+                    cout << "Time: " << elapsed.count() << " seconds" << endl;
+
+                    cout << "Game Over!\nEnter any value to return to menu" << endl;
+                    delete_board(board, ROWS);
+                    delete_board(coords_uncovered, ROWS);
+                    cin >> input;
+                    menu_started = false;
+                    break;
+                }
+
+                // Toggle flagging
+                if (flag && coords_uncovered[row][col] == '?')
+                    coords_uncovered[row][col] = '*';
+                else if (flag && coords_uncovered[row][col] == '*')
+                    coords_uncovered[row][col] = '?';
+                // Uncovering square
+                else if (coords_uncovered[row][col] == '*')
+                {
+                    coords_uncovered[row][col] = board[row][col];
+                    uncovered++;
+                    cout << uncovered << endl;
+                }
+
+                // Winning condition
+                if (uncovered == (ROWS * COLS - total_mines))
+                {
+                    cout << "\033[H\033[J";
+                    print_board(board, ROWS, COLS);
+
+                    auto end = chrono::high_resolution_clock::now();
+                    auto elapsed = chrono::duration_cast<chrono::seconds>(end - begin);
+                    cout << "Time: " << elapsed.count() << " seconds" << endl;
+
+                    cout << "You Win!\nEnter any value to return to menu" << endl;
+                    delete_board(board, ROWS);
+                    delete_board(coords_uncovered, ROWS);
+                    cin >> input;
+                    menu_started = false;
+                    break;
+                }
+            }
         }
         else if (command == "3")
         {

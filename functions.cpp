@@ -17,20 +17,31 @@ void initialize_board(char **board, int ROWS, int COLS, char letter)
     }
 }
 
-bool load_board(char **board, int &ROWS, int &COLS)
+bool load_board(char **&board, char **&coords_uncovered, int &ROWS, int &COLS, int &uncovered, int &total_mines)
 {
     ifstream fin("savefile.txt");
     if (fin.fail())
         return false;
 
-    fin >> ROWS >> COLS;
-    char input;
+    fin >> ROWS >> COLS >> uncovered >> total_mines;
+
+    board = new char *[ROWS];
     for (int i = 0; i < ROWS; i++)
     {
         board[i] = new char[COLS];
         for (int j = 0; j < COLS; j++)
         {
             fin >> board[i][j];
+        }
+    }
+
+    coords_uncovered = new char *[ROWS];
+    for (int i = 0; i < ROWS; i++)
+    {
+        coords_uncovered[i] = new char[COLS];
+        for (int j = 0; j < COLS; j++)
+        {
+            fin >> coords_uncovered[i][j];
         }
     }
     fin.close();
@@ -185,28 +196,61 @@ void delete_board(char **board, int ROWS)
     delete[] board;
 }
 
-bool save_board(char **board, int ROWS, int COLS)
+bool save_board(char **board, char **coords_uncovered, int ROWS, int COLS, int uncovered, int total_mines)
 {
-    ofstream fout("savefile2.txt");
+    // Override warning
+    string input;
+    ifstream fin("savefile.txt");
+    if (!fin.fail())
+    {
+        cout << "Existing save file detected. Override it? y/n" << endl;
+        while (true)
+        {
+            cout << ">> ";
+            cin >> input;
+            if (input == "y")
+                break;
+            else if (input == "n")
+            {
+                fin.close();
+                return false;
+            }
+        }
+    }
+    fin.close();
+
+    ofstream fout("savefile.txt");
     if (fout.fail())
     {
         delete_board(board, ROWS);
         return false;
     }
 
-    // Save ROWS and COLS into the first line
-    fout << ROWS << ' ' << COLS << '\n';
+    // Save ROWS, COLS, uncovered, total_mines into the first line
+    fout << ROWS << ' ' << COLS << ' ' << uncovered << ' ' << total_mines << '\n';
 
     // Save the board
     for (int i = 0; i < ROWS; i++)
     {
         for (int j = 0; j < COLS; j++)
         {
-            fout << board[i][j];
+            fout << board[i][j] << ' ';
         }
         fout << '\n';
     }
+
+    // Save the other board
+    for (int i = 0; i < ROWS; i++)
+    {
+        for (int j = 0; j < COLS; j++)
+        {
+            fout << coords_uncovered[i][j] << ' ';
+        }
+        fout << '\n';
+    }
+
     fout.close();
-    cout << "Saved" << endl;
+    cout << "Saved Successfully\nEnter any value to return" << endl;
+    cin >> input;
     return true;
 }
