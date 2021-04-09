@@ -3,6 +3,7 @@
 #include <cstdlib> // rand
 #include <ctime>
 #include <fstream>
+#include <chrono>
 #include "functions.h"
 #include "prints.h"
 using namespace std;
@@ -48,6 +49,41 @@ bool load_board(char **&board, char **&coords_uncovered, int &ROWS, int &COLS, i
     }
     fin.close();
     return true;
+}
+
+void select_difficulty(char &difficulty, int &ROWS, int &COLS)
+{
+    cout << "\nSELECT DIFFICULTY" << endl;
+    cout << "1. Easy   2. Medium   3. Hard   4. Holy Shit\n";
+    while (69 < 420) // lmao nice
+    {
+        cout << ">> ";
+        cin >> difficulty;
+        if (difficulty == '1')
+        {
+            ROWS = 6;
+            COLS = 8;
+            break;
+        }
+        else if (difficulty == '2')
+        {
+            ROWS = 8;
+            COLS = 10;
+            break;
+        }
+        else if (difficulty == '3')
+        {
+            ROWS = 10;
+            COLS = 12;
+            break;
+        }
+        else if (difficulty == '4')
+        {
+            ROWS = 18;
+            COLS = 20;
+            break;
+        }
+    }
 }
 
 int generate_mines(char **board, int ROWS, int COLS)
