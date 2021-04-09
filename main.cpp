@@ -48,8 +48,45 @@ int main()
             char **coords_uncovered = new char *[ROWS];
             initialize_board(coords_uncovered, ROWS, COLS, '*');
 
-            total_mines = generate_mines(board, ROWS, COLS);
-            generate_clues(board, ROWS, COLS);
+            string input;
+            int row, col;
+
+            // making sure first input isn't near a bomb
+            for (int i = 0; i < 2; i++)
+            {
+                print_board(coords_uncovered, ROWS, COLS);
+                cout << ">> ";
+                //cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                getline(cin, input); // a0, b1, etc.
+                if (i == 1)
+                {
+                    if (input.length() == 3 && islower(input[0]) && isdigit(input[1]) && isdigit(input[2]))
+                    {
+                        row = input[0] - 'a';
+                        col = input[2] - '0' + 10;
+                        // Check for limit and repeated row/col
+                        if (row >= ROWS || col >= COLS || board[row][col] < '0')
+                            continue;
+                    }
+                    else if (input.length() == 2 && islower(input[0]) && isdigit(input[1]))
+                    {
+                        row = input[0] - 'a';
+                        col = input[1] - '0';
+                        // Check for limit and repeated row/col
+                        if (row >= ROWS || col >= COLS || board[row][col] < '0')
+                            continue;
+                    }
+                    total_mines = generate_mines(board, ROWS, COLS, row, col);
+                    generate_clues(board, ROWS, COLS);
+                    if (board[row][col] == '0')
+                    {
+                        flood_fill(board, coords_uncovered, ROWS, COLS, row, col, uncovered);
+                    }
+                    coords_uncovered[row][col] = board[row][col];
+                    uncovered++;
+                    cout << uncovered << endl;
+                }
+            }
 
             // Game Loop
             game_loop(board, coords_uncovered, ROWS, COLS, uncovered, total_mines, game_started, menu_started, difficulty);

@@ -86,7 +86,7 @@ void select_difficulty(char &difficulty, int &ROWS, int &COLS)
     }
 }
 
-int generate_mines(char **board, int ROWS, int COLS)
+int generate_mines(char **board, int ROWS, int COLS, int row, int col)
 {
     srand(time(NULL));
     int count = 0;
@@ -94,11 +94,11 @@ int generate_mines(char **board, int ROWS, int COLS)
     // cout << "Total number of mines: " << total_mines << endl;
     while (count < total_mines)
     {
-        int row = rand() % ROWS;
-        int col = rand() % COLS;
-        if (board[row][col] != 'X')
+        int xrow = rand() % ROWS;
+        int xcol = rand() % COLS;
+        if (board[xrow][xcol] != 'X' && (xrow != row) && (xcol != col) && (xrow != row + 1) && (xcol != col) + 1 && (xrow != row - 1) && (xcol != col - 1))
         {
-            board[row][col] = 'X';
+            board[xrow][xcol] = 'X';
             count++;
         }
     }
@@ -114,21 +114,31 @@ void generate_clues(char **board, int ROWS, int COLS)
             if (board[row][col] == 'X')
             {
                 // check if it doesn't touch the borders or isn't a mine, then add 1 on the tiles
-                if (col > 0 && board[row][col - 1] != 'X') // check left/right
-                    board[row][col - 1] += 1;
-
-                if (col < COLS && board[row][col + 1] != 'X')
-                    board[row][col + 1] += 1;
-
+                if (col > 0)
+                {
+                    if (board[row][col - 1] != 'X') // check left/right
+                        board[row][col - 1] += 1;
+                }
+                if (col < COLS)
+                {
+                    if (board[row][col + 1] != 'X')
+                        board[row][col + 1] += 1;
+                }
                 // check top row
                 if (row > 0)
                 {
                     if (board[row - 1][col] != 'X') // if not X
                         board[row - 1][col] += 1;
-                    if (col > 0 && board[row - 1][col - 1] != 'X') // and if left/right are fine too
-                        board[row - 1][col - 1] += 1;
-                    if (col < COLS && board[row - 1][col + 1] != 'X')
-                        board[row - 1][col + 1] += 1;
+                    if (col > 0)
+                    {
+                        if (board[row - 1][col - 1] != 'X') // and if left/right are fine too
+                            board[row - 1][col - 1] += 1;
+                    }
+                    if (col < COLS)
+                    {
+                        if (board[row - 1][col + 1] != 'X')
+                            board[row - 1][col + 1] += 1;
+                    }
                 }
 
                 // check bottom row
@@ -136,10 +146,16 @@ void generate_clues(char **board, int ROWS, int COLS)
                 {
                     if (board[row + 1][col] != 'X') // if not X
                         board[row + 1][col] += 1;
-                    if (col > 0 && board[row + 1][col - 1] != 'X') // and if left/right are fine too
-                        board[row + 1][col - 1] += 1;
-                    if (col < COLS && board[row + 1][col + 1] != 'X')
-                        board[row + 1][col + 1] += 1;
+                    if (col > 0)
+                    {
+                        if (board[row + 1][col - 1] != 'X') // and if left/right are fine too
+                            board[row + 1][col - 1] += 1;
+                    }
+                    if (col < COLS)
+                    {
+                        if (board[row + 1][col + 1] != 'X')
+                            board[row + 1][col + 1] += 1;
+                    }
                 }
             }
         }
@@ -264,12 +280,12 @@ void game_loop(char **board, char **coords_uncovered, int ROWS, int COLS, int un
     while (true)
     {
         bool flag = false;
-        //cout << "\033[H\033[J";
+        cout << "\033[H\033[J";
         print_board(coords_uncovered, ROWS, COLS);
-        // print_board(board, ROWS, COLS);
+        //print_board(board, ROWS, COLS);
         cout << ">> ";
-        if (!game_started)
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        // if (!game_started)
+        //     cin.ignore(numeric_limits<streamsize>::max(), '\n');
         getline(cin, input); // a0, b1, etc.
         game_started = true;
 
@@ -373,10 +389,9 @@ void game_loop(char **board, char **coords_uncovered, int ROWS, int COLS, int un
         // Uncovering square
         else if (coords_uncovered[row][col] == '*')
         {
-            cout << "HI" << endl;
-            coords_uncovered[row][col] = board[row][col];
-            uncovered++;
-            cout << uncovered << endl;
+            ;
+            ;
+            ;
         }
 
         // Winning condition
