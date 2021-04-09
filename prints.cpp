@@ -18,13 +18,10 @@ void print_board(char **board, int ROWS, int COLS)
     cout << endl;
 
     // separator
-    cout << "  ┼–";
+    cout << "  ┼";
     for (int i = 0; i < COLS; i++)
     {
-        if (i != COLS - 1)
-            cout << "––┼–";
-        else
-            cout << "––┤";
+        cout << "–––┼";
     }
     cout << endl;
 
@@ -63,10 +60,21 @@ void print_board(char **board, int ROWS, int COLS)
     }
 }
 
+void print_title()
+{
+    cout << "\033[H\033[J";
+    cout << "█▀▄▀█  ▀  █▀▀▄ █▀▀ █▀▀ █   █ █▀▀ █▀▀ █▀▀█ █▀▀ █▀▀█" << endl;
+    cout << "█ ▀ █ ▀█▀ █  █ █▀▀ ▀▀█ █▄█▄█ █▀▀ █▀▀ █  █ █▀▀ █▄▄▀" << endl;
+    cout << "▀   ▀ ▀▀▀ ▀  ▀ ▀▀▀ ▀▀▀  ▀ ▀  ▀▀▀ ▀▀▀ █▀▀▀ ▀▀▀ ▀ ▀▀" << endl;
+    cout << "\n0. Instructions   1. New Game   2. Load Game   3. Quit" << endl;
+    cout << ">> ";
+}
+
 void print_instructions()
 {
-    cout << "█▀▄▀█ █ █▄░█ █▀▀ █▀ █░█░█ █▀▀ █▀▀ █▀█ █▀▀ █▀█" << endl;
-    cout << "█░▀░█ █ █░▀█ ██▄ ▄█ ▀▄▀▄▀ ██▄ ██▄ █▀▀ ██▄ █▀▄\n" << endl;
+    cout << "█ █▄ █ █▀ ▀█▀ █▀█ █ █ █▀▀ ▀█▀ █ █▀█ █▄ █ █▀" << endl;
+    cout << "█ █ ▀█ ▄█  █  █▀▄ █▄█ █▄▄  █  █ █▄█ █ ▀█ ▄█\n"
+         << endl;
     string input;
     cout << "WIN by uncovering all the unarmed mines \nLOSE by stepping on an armed mine \n \n";
 
@@ -80,4 +88,36 @@ void print_instructions()
 
     cout << ">> ";
     cin >> input;
+}
+
+void print_summary(char difficulty, int time, int uncovered, int flaggedBombs, int total_mines)
+{
+    cout << "Mode: ";
+    if (difficulty == '1')
+        cout << "Easy" << endl;
+    else if (difficulty == '2')
+        cout << "Medium" << endl;
+    else if (difficulty == '3')
+        cout << "Hard" << endl;
+    else if (difficulty == '4')
+        cout << "Holy Shit" << endl;
+    cout << "Time: ";
+    if ((time / 60) > 1)
+        cout << time / 60 << " minutes and " << (time % 60) << " seconds" << endl;
+    else if ((time / 60) >= 1)
+        cout << (time / 60) << " minute and " << (time % 60) << " seconds" << endl;
+    else
+        cout << time << " seconds" << endl;
+    cout << "Mines travelled: " << uncovered << endl;
+    cout << "Bombs flagged: " << flaggedBombs << "/" << total_mines << endl;
+
+    cout << "\nEnter any value to return to menu" << endl;
+    cout << ">> ";
+}
+
+void print_end()
+{
+    cout << "\033[H\033[J";
+    cout << "█▀▀ █▀█ █▀█ █▀▄ █▄▄ █▄█ █▀▀ █" << endl;
+    cout << "█▄█ █▄█ █▄█ █▄▀ █▄█  █  ██▄ ▄" << endl;
 }
