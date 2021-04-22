@@ -4,13 +4,16 @@ functions.o: functions.cpp functions.h
 prints.o: prints.cpp prints.h
 	g++ -c $<
 
-main.o: main.cpp functions.h
+board.o: board.cpp board.h functions.h
 	g++ -c $<
 
-main: main.o functions.o prints.o
+main.o: main.cpp board.h functions.h prints.h
+	g++ -c $<
+
+main: main.o functions.o prints.o board.o
 	g++ -pedantic-errors -std=c++11 $^ -o $@
 
 clean:
-	rm -f main.o functions.o prints.o savefile.txt main
+	rm -f main.o functions.o prints.o board.o savefile.txt main
 
 .PHONY: clean
