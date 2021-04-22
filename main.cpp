@@ -3,7 +3,6 @@
 #include <cctype>
 #include <limits> //
 //#include <chrono> // time function in end summary
-#include <cmath>  // floor division in end summary
 #include "functions.h"
 #include "prints.h"
 using namespace std;
@@ -117,7 +116,6 @@ int main()
             else if (ROWS == 18 && COLS == 20)
                 difficulty = '4';
 
-            // Declaring variables
             bool game_started = false; // also for cin cout problem
 
             // Game Loop

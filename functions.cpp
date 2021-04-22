@@ -272,7 +272,7 @@ void game_loop(char **board, char **coords_uncovered, int ROWS, int COLS, int un
 {
     // Variables
     string input;
-    int row, col; // user row col input
+    int row, col;
 
     // Start clock
     auto begin = chrono::high_resolution_clock::now();
@@ -286,7 +286,7 @@ void game_loop(char **board, char **coords_uncovered, int ROWS, int COLS, int un
         cout << ">> ";
         // if (!game_started)
         //     cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        getline(cin, input); // a0, b1, etc.
+        getline(cin, input);
         game_started = true;
 
         // Exit and save commands
@@ -365,10 +365,8 @@ void game_loop(char **board, char **coords_uncovered, int ROWS, int COLS, int un
             }
 
             cout << "\033[H\033[J";
-
             cout << "█▀▀ ▄▀█ █▀▄▀█ █▀▀   █▀█ █ █ █▀▀ █▀█" << endl;
-            cout << "█▄█ █▀█ █ ▀ █ ██▄   █▄█ ▀▄▀ ██▄ █▀▄\n"
-                 << endl;
+            cout << "█▄█ █▀█ █ ▀ █ ██▄   █▄█ ▀▄▀ ██▄ █▀▄\n" << endl;
 
             print_board(board, ROWS, COLS);
             cout << endl;
@@ -389,9 +387,7 @@ void game_loop(char **board, char **coords_uncovered, int ROWS, int COLS, int un
         // Uncovering square
         else if (coords_uncovered[row][col] == '*')
         {
-            ;
-            ;
-            ;
+            coords_uncovered[row][col] = board[row][col];
         }
 
         // Winning condition
@@ -413,10 +409,8 @@ void game_loop(char **board, char **coords_uncovered, int ROWS, int COLS, int un
             }
 
             cout << "\033[H\033[J";
-
             cout << "█▀▀ █▀█ █▄ █ █▀▀ █▀█ ▄▀█ ▀█▀ █ █ █   ▄▀█ ▀█▀ █ █▀█ █▄ █ █▀" << endl;
-            cout << "█▄▄ █▄█ █ ▀█ █▄█ █▀▄ █▀█  █  █▄█ █▄▄ █▀█  █  █ █▄█ █ ▀█ ▄█\n"
-                 << endl;
+            cout << "█▄▄ █▄█ █ ▀█ █▄█ █▀▄ █▀█  █  █▄█ █▄▄ █▀█  █  █ █▄█ █ ▀█ ▄█\n" << endl;
 
             print_board(board, ROWS, COLS);
             cout << endl;

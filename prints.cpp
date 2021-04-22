@@ -108,7 +108,7 @@ void print_summary(char difficulty, int time, int uncovered, int flaggedBombs, i
         cout << (time / 60) << " minute and " << (time % 60) << " seconds" << endl;
     else
         cout << time << " seconds" << endl;
-    cout << "Mines travelled: " << uncovered << endl;
+    cout << "Tiles uncovered: " << uncovered << endl;
     cout << "Bombs flagged: " << flaggedBombs << "/" << total_mines << endl;
 
     cout << "\nEnter any value to return to menu" << endl;
