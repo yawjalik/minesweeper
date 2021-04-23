@@ -49,41 +49,40 @@ int main()
             string input;
             int row, col;
 
-            // // making sure first input isn't near a bomb
-            // for (int i = 0; i < 2; i++)
-            // {
-            //     board.print_board(board.covered_board);
-            //     cout << ">> ";
-            //     //cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            //     getline(cin, input); // a0, b1, etc.
-            //     if (i == 1)
-            //     {
-            //         if (is_2digit_coord(input))
-            //         {
-            //             row = input[0] - 'a';
-            //             col = input[2] - '0' + 10;
-            //         }
-            //         else if (is_1digit_coord(input))
-            //         {
-            //             row = input[0] - 'a';
-            //             col = input[1] - '0';
-            //         }
+            // First move: making sure first input isn't near a bomb
+            while(true)
+            {
+				clear_screen();
+                board.print_board(board.covered_board);
+                cout << ">> ";
+                //cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                getline(cin, input); // a0, b1, etc.
 
-            //         // Check for limit and repeated row/col
-            //         if (row >= board.ROWS || col >= board.COLS || board.raw_board[row][col] < '0')
-            //             continue;
+                if (is_2digit_coord(input))
+                {
+                    row = input[0] - 'a';
+                    col = input[2] - '0' + 10;
+                }
+                else if (is_1digit_coord(input))
+                {
+                    row = input[0] - 'a';
+                    col = input[1] - '0';
+                }
+                else
+                	continue;
 
-            //         board.generate_mines(row, col);
-            //         board.generate_clues();
-            //         if (board.raw_board[row][col] == '0')
-            //         {
-            //             board.flood_fill(row, col);
-            //         }
-            //         board.covered_board[row][col] = board.raw_board[row][col];
-            //     }
-            // }
-            board.generate_mines(row, col);
-            board.generate_clues();
+                // Additional check for limit
+                if (row >= board.ROWS || col >= board.COLS)
+                    continue;
+
+                board.generate_mines(row, col);
+                board.generate_clues();
+                if (board.raw_board[row][col] == '0')
+                    board.flood_fill(row, col);
+                else
+                	board.covered_board[row][col] = board.raw_board[row][col];
+                break;
+            }
 
         }
         else if (command == "2")
@@ -131,7 +130,7 @@ int main()
 	        cin >> input;
 
 	        // Exit and save commands
-	        if (input == "quit" || input == "exit")
+	        if (input == "quit" || input == "q")
 	        {
 	            break;
 	        }
@@ -206,10 +205,10 @@ int main()
 		            cout << "█▄█ █▀█ █ ▀ █ ██▄   █▄█ ▀▄▀ ██▄ █▀▄\n" << endl;
 
 		            board.print_board(board.raw_board);
-		            cout << endl;
+		            // cout << endl;
 		            board.print_summary(elapsed.count());
 
-		            cin >> input;
+					cin >> input;
 		            break;
 		        }
 
@@ -225,7 +224,7 @@ int main()
 		            cout << "█▄▄ █▄█ █ ▀█ █▄█ █▀▄ █▀█  █  █▄█ █▄▄ █▀█  █  █ █▄█ █ ▀█ ▄█\n" << endl;
 
 		            board.print_board(board.raw_board);
-		            cout << endl;
+		            // cout << endl;
 		            board.print_summary(elapsed.count());
 
 		            cin >> input;

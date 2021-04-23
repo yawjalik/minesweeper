@@ -30,7 +30,6 @@ void Board::initialize_board()
     covered_board = new char*[ROWS];
     for (int i = 0; i < ROWS; i++)
     {
-        cout << "i = " << i << endl;
         raw_board[i] = new char[COLS];
         covered_board[i] = new char[COLS];
         for (int j = 0; j < COLS; j++)
@@ -139,9 +138,9 @@ void Board::save_board()
     }
 
     // Save ROWS, COLS, total_mines, uncovered into the first line
-    fout << ROWS << COLS << ' ' << total_mines << ' ' << uncovered << '\n';
+    fout << ROWS << ' ' << COLS << ' ' << total_mines << ' ' << uncovered << '\n';
 
-    // Save the board
+    // Save the raw_board
     for (int i = 0; i < ROWS; i++)
     {
         for (int j = 0; j < COLS; j++)
@@ -151,7 +150,7 @@ void Board::save_board()
         fout << '\n';
     }
 
-    // Save the other board
+    // Save the covered_board
     for (int i = 0; i < ROWS; i++)
     {
         for (int j = 0; j < COLS; j++)
@@ -242,12 +241,11 @@ void Board::print_summary(int elapsed_time)
         cout << (elapsed_time / 60) << " minute and " << (elapsed_time % 60) << " seconds" << endl;
     else
         cout << elapsed_time << " seconds" << endl;
-    cout << "Tiles uncovered: " << uncovered << endl;
-    cout << "Bombs flagged: " << flaggedBombs << "/" << total_mines << endl;
+    cout << "Tiles uncovered: " << uncovered << '/' << ROWS * COLS << endl;
+    cout << "Bombs flagged: " << flaggedBombs << '/' << total_mines << endl;
 
     cout << "\nEnter any value to return to menu" << endl;
     cout << ">> ";
-
 }
 
 void Board::generate_mines(int row, int col)
@@ -257,12 +255,11 @@ void Board::generate_mines(int row, int col)
     total_mines = (ROWS * COLS * 0.125);
     while (count < total_mines)
     {
-        int xrow = rand() % ROWS;
-        int xcol = rand() % COLS;
-        // if (raw_board[xrow][xcol] != 'X' && (xrow != row) && (xcol != col) && (xrow != row + 1) && (xcol != col) + 1 && (xrow != row - 1) && (xcol != col - 1))
-        if (raw_board[xrow][xcol] != 'X')
+        int r = rand() % ROWS;
+        int c = rand() % COLS;
+        if (raw_board[r][c] != 'X' && (r != row) && (c != col) && (r != row + 1) && (c != col) + 1 && (r != row - 1) && (c != col - 1))
         {
-            raw_board[xrow][xcol] = 'X';
+            raw_board[r][c] = 'X';
             count++;
         }
     }
