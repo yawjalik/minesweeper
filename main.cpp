@@ -18,7 +18,6 @@ int main()
 {
     // Main Menu
     string command;
-    bool menu_started = false; // for the cin cout problem
 
     while (true)
     {
@@ -28,11 +27,9 @@ int main()
         // Print main menu and get input:
         clear_screen();
         print_title();
-
-        if (menu_started)
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
         getline(cin, command);
-        menu_started = true;
+
+        bool quit = false;  // To check if player quits in the first move
 
         if (command == "0")
         {
@@ -55,8 +52,19 @@ int main()
 				clear_screen();
                 board.print_board(board.covered_board);
                 cout << ">> ";
-                //cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 getline(cin, input); // a0, b1, etc.
+
+            	// Exit and save commands
+		        if (input == "quit" || input == "q")
+		        {
+		        	quit = true;
+		            break;
+		        }
+		        else if (input == "save")
+		        {
+		        	board.save_board();
+		        	continue;
+		        }
 
                 if (is_2digit_coord(input))
                 {
@@ -88,15 +96,14 @@ int main()
         else if (command == "2")
         {
         	string input;
+
 			// Load board
 		    if (!board.load_board())
 		    {
-			    cout << "No save file detected\nEnter any value to return to menu" << endl;
-	        	cin >> input;
+			    cout << "No save file detected!\nPress ENTER to return to menu" << endl;
+	        	getline(cin, input);
 	        	continue;
 		    }
-
-            bool game_started = false;
         }
         else if (command == "3")
         {
@@ -106,7 +113,6 @@ int main()
         }
         else
         {
-            menu_started = false;
             continue;
         }
 
@@ -120,14 +126,13 @@ int main()
 	    // Start the timer
 	    auto begin = chrono::high_resolution_clock::now();
 
-	    while (true)
+	    while (!quit)
 	    {
 	        flag = false;
 	        clear_screen();
 	        board.print_board(board.covered_board);
-	        //print_board(board, ROWS, COLS);
 	        cout << ">> ";
-	        cin >> input;
+	        getline(cin, input);
 
 	        // Exit and save commands
 	        if (input == "quit" || input == "q")
@@ -140,7 +145,7 @@ int main()
 	        	continue;
 	        }
 
-	        // Check invalid input, set row col, check valid row col and no repeats
+	        // Check invalid input, set row col, check row col limits and no repeats
 	        if (is_2digit_coord(input))
 	        {
 	            row = input[0] - 'a';
@@ -205,10 +210,9 @@ int main()
 		            cout << "█▄█ █▀█ █ ▀ █ ██▄   █▄█ ▀▄▀ ██▄ █▀▄\n" << endl;
 
 		            board.print_board(board.raw_board);
-		            // cout << endl;
 		            board.print_summary(elapsed.count());
 
-					cin >> input;
+					getline(cin, input);
 		            break;
 		        }
 
@@ -224,10 +228,9 @@ int main()
 		            cout << "█▄▄ █▄█ █ ▀█ █▄█ █▀▄ █▀█  █  █▄█ █▄▄ █▀█  █  █ █▄█ █ ▀█ ▄█\n" << endl;
 
 		            board.print_board(board.raw_board);
-		            // cout << endl;
 		            board.print_summary(elapsed.count());
 
-		            cin >> input;
+		            getline(cin, input);
 		            break;
 		        }
             }

@@ -31,10 +31,9 @@ void print_instructions()
 
     cout << "For the best experience, please adjust your terminal size to handle larger boards\n \n";
 
-    cout << "Enter any value to return to menu" << endl;
+    cout << "Press ENTER to return to menu ";
 
-    cout << ">> ";
-    cin >> input;
+    getline(cin, input);
 }
 
 void print_end()

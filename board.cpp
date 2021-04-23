@@ -118,7 +118,7 @@ void Board::save_board()
         while (true)
         {
             cout << ">> ";
-            cin >> input;
+            getline(cin, input);
             if (input == "y")
                 break;
             else if (input == "n")
@@ -161,8 +161,8 @@ void Board::save_board()
     }
 
     fout.close();
-    cout << "Saved Successfully\nEnter any value to return" << endl;
-    cin >> input;
+    cout << "Saved Successfully\nPress ENTER to continue" << endl;
+    getline(cin, input);
 }
 
 // Prints either the raw or covered board, depending on argument
@@ -241,11 +241,10 @@ void Board::print_summary(int elapsed_time)
         cout << (elapsed_time / 60) << " minute and " << (elapsed_time % 60) << " seconds" << endl;
     else
         cout << elapsed_time << " seconds" << endl;
-    cout << "Tiles uncovered: " << uncovered << '/' << ROWS * COLS << endl;
+    cout << "Tiles uncovered: " << uncovered << '/' << ROWS * COLS - total_mines << endl;
     cout << "Bombs flagged: " << flaggedBombs << '/' << total_mines << endl;
 
-    cout << "\nEnter any value to return to menu" << endl;
-    cout << ">> ";
+    cout << "\nPress ENTER to return to menu ";
 }
 
 void Board::generate_mines(int row, int col)
