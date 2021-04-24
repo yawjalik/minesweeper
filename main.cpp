@@ -61,7 +61,9 @@ int main()
 		        }
 		        else if (input == "save")
 		        {
-		        	board.save_board();
+		        	cout << "Make your first move first!" << endl;
+		        	cout << "Press ENTER to continue";
+		        	getline(cin, input);
 		        	continue;
 		        }
 

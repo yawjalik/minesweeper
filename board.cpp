@@ -161,7 +161,7 @@ void Board::save_board()
     }
 
     fout.close();
-    cout << "Saved Successfully\nPress ENTER to continue" << endl;
+    cout << "Saved Successfully. Press ENTER to continue";
     getline(cin, input);
 }
 
@@ -373,7 +373,7 @@ string Board::get_difficulty()
     {
         return "Hard";
     }
-    else if (ROWS == 10 && COLS == 12)
+    else if (ROWS == 18 && COLS == 20)
     {
         return "Holy Shit";
     }
