@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 #include <cstdlib>
 #include <ctime>
 #include <fstream>
@@ -76,12 +77,12 @@ void Board::select_difficulty()
     }
 }
 
-bool Board::load_board()
+bool Board::load_board(int& previous_time)
 {
     ifstream fin("savefile.txt");
     if (fin.fail())
         return false;
-    fin >> ROWS >> COLS >> total_mines >> uncovered;
+    fin >> ROWS >> COLS >> total_mines >> uncovered >> previous_time;
 
     raw_board = new char*[ROWS];
     for (int i = 0; i < ROWS; i++)
@@ -106,7 +107,7 @@ bool Board::load_board()
     return true;
 }
 
-void Board::save_board()
+void Board::save_board(int previous_time)
 {
     // Override warning
     string input;
@@ -138,7 +139,7 @@ void Board::save_board()
     }
 
     // Save ROWS, COLS, total_mines, uncovered into the first line
-    fout << ROWS << ' ' << COLS << ' ' << total_mines << ' ' << uncovered << '\n';
+    fout << ROWS << ' ' << COLS << ' ' << total_mines << ' ' << uncovered << ' ' << previous_time << '\n';
 
     // Save the raw_board
     for (int i = 0; i < ROWS; i++)

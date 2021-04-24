@@ -13,8 +13,8 @@ struct Board
 
     void initialize_board();
     void select_difficulty();
-    bool load_board();
-    void save_board();
+    bool load_board(int& previous_time);
+    void save_board(int previous_time);
     void print_board(char **board);
     void print_summary(int elapsed_time);
     void generate_mines(int row, int col);
