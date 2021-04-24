@@ -30,14 +30,14 @@ Program can be built using default make arguments.
 
 1. Generation of random game sets or events
 
-- Randomly generated mines that was also controlled dependant on the first move
+- Randomly generated mines that are dependant on the first move
   (board.cpp, `Board::generate_mines()`)
 
 2. Data structures for storing game status
 
 - Board struct that stores information of the minesweeper board (board.cpp, `Board::Board()`)
-- Other variables that kept track of the game is `string input`, `int row, col` (main.cpp, 47)
-- `int previous_time` was a special variable that traverse through different save files to keep an accurate measurment of the gameplay time
+- Other variables that kept track of the game are `string input`, `int row, col` (main.cpp, 47)
+- `int previous_time` is a special variable that traverses through different save files to keep an accurate measurment of the gameplay time
 
 3. Dynamic memory management
 
