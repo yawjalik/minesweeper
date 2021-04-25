@@ -6,7 +6,7 @@
 
 - YAW Jalik (3035729435)
 - GUILLEMOT Raphaele Michelle (3033093337)
-  **Project:** Minesweeper, the game we all love/hate, in text-based format. Mines are randomly generated across the board and the player has to uncover all the empty blocks to win the game.
+  **Project:** Minesweeper, the game we all love/hate, in text-based format. Mines are randomly generated across the board and the player has to uncover all the empty blocks to win the game. Players have the option to choose a new game or load game with a save-file.
 
 ---
 
@@ -47,7 +47,7 @@ Program can be built using 'make main' on the terminal.
 
 4. File input/output
 
-- Saving/loading external save-files in `savefile.txt`
+- Saving/loading external save-file in `savefile.txt`
   (board.cpp, `Board::load_board()`, `Board::save_board()`)
 
 5. Program codes in multiple files (board.cpp, functions.cpp, main.cpp, prints.cpp)
