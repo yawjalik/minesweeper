@@ -52,6 +52,7 @@ Program can be built using 'make main' on the terminal.
 7. In-code documentation in the beginning of every `.cpp` file and throughout
 
 *** Program compiled and tested in both academy11 and academy21 servers
+*** input and output files in sample_gameplay are only for reference, NOT suitable for automated testing as the game is random.
 
 ---
 
