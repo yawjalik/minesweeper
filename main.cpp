@@ -107,7 +107,7 @@ int main()
 			// Load board
 			if (!board.load_board(previous_time))
 			{
-				cout << "No save file detected!\nPress ENTER to return to menu" << endl;
+				cout << "No save file detected!\nPress ENTER to return to menu";
 				getline(cin, input);
 				continue;
 			}

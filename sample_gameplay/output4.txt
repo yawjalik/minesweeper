@@ -1,4 +1,3 @@
-crushedsummers@Gwens-Air minesweeper % ./main
 █▀▄▀█  ▀  █▀▀▄ █▀▀ █▀▀ █   █ █▀▀ █▀▀ █▀▀█ █▀▀ █▀▀█
 █ ▀ █ ▀█▀ █  █ █▀▀ ▀▀█ █▄█▄█ █▀▀ █▀▀ █  █ █▀▀ █▄▄▀
 ▀   ▀ ▀▀▀ ▀  ▀ ▀▀▀ ▀▀▀  ▀ ▀  ▀▀▀ ▀▀▀ █▀▀▀ ▀▀▀ ▀ ▀▀
@@ -754,4 +753,3 @@ Press ENTER to return to menu
 >> 3
 █▀▀ █▀█ █▀█ █▀▄ █▄▄ █▄█ █▀▀ █
 █▄█ █▄█ █▄█ █▄▀ █▄█  █  ██▄ ▄
-crushedsummers@Gwens-Air minesweeper %  
